@@ -24,16 +24,13 @@ int count() {
 }
 
 void union_(int p, int q) {
-	int pID = find(p);
-	int qID = find(q);
+	int i = find(p);
+	int j = find(q);
 
-	if(pID == qID) return;
+	if(i == j) return;
 
-	for (int i = 0; i < intialcount; i++) {
-		if (id[i] == pID) {
-			id[i] = qID;
-		}
-	}
+	id[i] = j;
+
 	cnt--;
 };
 
@@ -42,7 +39,11 @@ int connected(p, q) {
 }
 
 int find(int p) {
-	return id[p];
+	while (p != id[p]) {
+		p = id[p];
+	}
+
+	return p;
 }
 
 int main(int argc, char *argv[])
