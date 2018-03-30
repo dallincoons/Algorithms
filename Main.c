@@ -15,11 +15,20 @@ void exch(int *list, int indexA, int IndexB) {
 
 int * sort(int *list) {
 	
-	for(int i = 1; i < size; i++) {
-		for(int j = i; j > 0 && less(list[j], list[j - 1]); j--) {
-			exch(list, j, j - 1);
+	int N = size;
+	int h = 1;
+	while (h < N/3) {
+		h = 3*h + 1;
+	}
+	while (h >= 1) {
+		for (int i = h; i < N; i++) {
+			for (int j = i; j >= h && less(list[j], list[j - h]); j -= h) {
+				exch(list, j, j - h);
+			}
 		}
-	}	
+		h = h/3;
+	}
+
 	return 0;
 }
 
