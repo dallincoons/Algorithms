@@ -3,6 +3,11 @@
 int list[] = {55, 34, 11, 2, 90, 87, 79, 72, 68, 59, 61, 65, 8, 93};
 int size;
 
+int min(int x, int y)
+{
+	return y ^ ((x ^ y) & -(x < y));
+}
+
 int less(int x, int y) {
 	return x < y;
 }
@@ -40,8 +45,13 @@ int * sortList(int *list, int lo, int hi) {
 
 int sort(int *list) 
 {
-	int aux[size];
-	sortList(list, 0, size - 1);
+	int N = size;
+	int aux[N];
+	for (int sz = 1; sz < N; sz = sz+sz) {
+		for (int lo = 0; lo < N-sz; lo += sz+sz) {
+			merge(list, lo, lo+sz-1, min(lo+sz+sz-1, N-1));
+		}
+	}
 	return 0;
 }
 
