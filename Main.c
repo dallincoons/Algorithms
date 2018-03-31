@@ -7,28 +7,41 @@ int less(int x, int y) {
 	return x < y;
 }
 
-void exch(int *list, int indexA, int IndexB) {
-	int swap = list[indexA];
-	list[indexA] = list[IndexB];
-	list[IndexB] = swap;
+int merge(int *list, int lo, int mid, int hi) {
+	int i = lo;
+	int j = mid + 1;
+	int aux[size];
+
+	for (int k = lo; k <= hi; k++) {
+		aux[k] = list[k];
+	}
+	for (int k = lo; k <= hi; k++) {
+		if (i > mid) {
+			list[k] = aux[j++];
+		} else if (j > hi) {
+			list[k] = aux[i++];
+		} else if (less(aux[j], aux[i])) {
+			list[k] = aux[j++];
+		} else {
+			list[k] = aux[i++];
+		}
+	}
+	return 0;
 }
 
-int * sort(int *list) {
-	
-	int N = size;
-	int h = 1;
-	while (h < N/3) {
-		h = 3*h + 1;
-	}
-	while (h >= 1) {
-		for (int i = h; i < N; i++) {
-			for (int j = i; j >= h && less(list[j], list[j - h]); j -= h) {
-				exch(list, j, j - h);
-			}
-		}
-		h = h/3;
-	}
+int * sortList(int *list, int lo, int hi) {
+	if (hi <= lo) return 0;
+	int mid = lo + (hi - lo)/2;
+	sortList(list, lo, mid);
+	sortList(list, mid+1, hi);
+	merge(list, lo, mid, hi);
+	return 0;
+}
 
+int sort(int *list) 
+{
+	int aux[size];
+	sortList(list, 0, size - 1);
 	return 0;
 }
 
@@ -36,9 +49,9 @@ int main(int argc, char *argv[])
 {
 	size = sizeof(list) / sizeof(list[0]);
 
-	int *sorted = sort(list);
+	sort(list);
 
 	for(int i = 0; i < size; i++) {
-		printf("%d \n", list[i]);		
+		printf("%d \n", list[i]);
 	}
 }
