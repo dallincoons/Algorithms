@@ -12,54 +12,42 @@ int less(int x, int y) {
 	return x < y;
 }
 
-int merge(int *list, int lo, int mid, int hi) {
-	int i = lo;
-	int j = mid + 1;
-	int aux[size];
-
-	for (int k = lo; k <= hi; k++) {
-		aux[k] = list[k];
-	}
-	for (int k = lo; k <= hi; k++) {
-		if (i > mid) {
-			list[k] = aux[j++];
-		} else if (j > hi) {
-			list[k] = aux[i++];
-		} else if (less(aux[j], aux[i])) {
-			list[k] = aux[j++];
-		} else {
-			list[k] = aux[i++];
-		}
-	}
-	return 0;
+void exch(int *list, int indexA, int IndexB) {
+	int swap = list[indexA];
+	list[indexA] = list[IndexB];
+	list[IndexB] = swap;
 }
 
-int * sortList(int *list, int lo, int hi) {
-	if (hi <= lo) return 0;
-	int mid = lo + (hi - lo)/2;
-	sortList(list, lo, mid);
-	sortList(list, mid+1, hi);
-	merge(list, lo, mid, hi);
-	return 0;
-}
-
-int sort(int *list) 
+int partition(int *list, int lo, int hi) 
 {
-	int N = size;
-	int aux[N];
-	for (int sz = 1; sz < N; sz = sz+sz) {
-		for (int lo = 0; lo < N-sz; lo += sz+sz) {
-			merge(list, lo, lo+sz-1, min(lo+sz+sz-1, N-1));
-		}
-	}
-	return 0;
+	int i = lo;
+	int j = hi+1;
+	int partitionItem = list[lo];
+
+	while (1) {
+		while (less(list[++i], partitionItem)) if (i == hi) break;
+		while (less(partitionItem, list[--j])) if (j == lo) break;
+		if (i >= j) break;
+		exch(list, i, j);
+	} 
+	exch(list, lo, j);
+	return j;
+}
+
+void sort(int *list, int lo, int hi) 
+{
+	if ( hi <= lo) return;
+	int j = partition(list, lo, hi);
+	sort(list, lo, j-1);
+	sort(list, j+1, hi);
+	return;
 }
 
 int main(int argc, char *argv[])
 {
 	size = sizeof(list) / sizeof(list[0]);
 
-	sort(list);
+	sort(list, 0, size - 1);
 
 	for(int i = 0; i < size; i++) {
 		printf("%d \n", list[i]);
